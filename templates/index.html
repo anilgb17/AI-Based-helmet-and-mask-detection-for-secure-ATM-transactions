@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Security System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel: ATM Interface -->
+        <div class="atm-panel">
+            <div class="atm-header">
+                <span class="header-text">SECURE ATM SYSTEM</span>
+                <div class="power-led"></div>
+            </div>
+            
+            <!-- ATM Screen -->
+            <div class="atm-screen">
+                <div id="welcome-screen" class="screen active">
+                    <h1 class="screen-title">WELCOME</h1>
+                    <div class="title-underline"></div>
+                    <p class="screen-text">Please insert your card<br>to continue</p>
+                </div>
+                
+                <div id="pin-screen" class="screen">
+                    <h1 class="screen-title">ENTER PIN</h1>
+                    <div class="title-underline"></div>
+                    <div class="pin-input-display">
+                        <input type="password" id="pin-input" maxlength="4" readonly placeholder="••••">
+                    </div>
+                </div>
+                
+                <div id="menu-screen" class="screen">
+                    <h1 class="screen-title">MAIN MENU</h1>
+                    <div class="title-underline"></div>
+                    <div class="balance-display">Balance: $<span id="balance">5000.00</span></div>
+                    <div class="menu-buttons">
+                        <button class="menu-btn" id="withdrawal-btn">Withdrawal</button>
+                        <button class="menu-btn" id="balance-btn">Check Balance</button>
+                        <button class="menu-btn" id="exit-btn">Exit</button>
+                    </div>
+                </div>
+                
+                <div id="withdrawal-screen" class="screen">
+                    <h1 class="screen-title">WITHDRAWAL</h1>
+                    <div class="title-underline"></div>
+                    <div class="balance-display">Available: $<span id="balance-withdrawal">5000.00</span></div>
+                    <input type="number" id="amount-input" class="amount-input" placeholder="Enter amount" min="0" max="1000">
+                    <div class="quick-amounts">
+                        <button class="quick-btn" data-amount="20">$20</button>
+                        <button class="quick-btn" data-amount="50">$50</button>
+                        <button class="quick-btn" data-amount="100">$100</button>
+                        <button class="quick-btn" data-amount="200">$200</button>
+                    </div>
+                </div>
+                
+                <div id="processing-screen" class="screen">
+                    <h1 class="screen-title">PROCESSING</h1>
+                    <div class="title-underline"></div>
+                    <div class="spinner"></div>
+                    <p class="screen-text">Please wait...</p>
+                </div>
+                
+                <div id="complete-screen" class="screen">
+                    <h1 class="screen-title">COMPLETE</h1>
+                    <div class="title-underline"></div>
+                    <div class="success-check">✓</div>
+                    <p class="screen-text">Transaction successful!</p>
+                    <div class="balance-display">New Balance: $<span id="balance-complete">0.00</span></div>
+                </div>
+                
+                <div id="receipt-prompt-screen" class="screen">
+                    <h1 class="screen-title">RECEIPT</h1>
+                    <div class="title-underline"></div>
+                    <p class="screen-text">Would you like a receipt?</p>
+                    <div class="receipt-choice-buttons">
+                        <button class="choice-btn yes-btn" id="receipt-yes-btn">YES</button>
+                        <button class="choice-btn no-btn" id="receipt-no-btn">NO</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card and Receipt Slots -->
+            <div class="slots-container">
+                <div class="card-slot">
+                    <div class="slot-led" id="card-led"></div>
+                    <div class="slot-opening">
+                        <div class="card-animation" id="card-animation"></div>
+                    </div>
+                </div>
+                
+                <div class="receipt-slot">
+                    <div class="slot-led" id="receipt-led"></div>
+                    <div class="receipt-opening">
+                        <div class="receipt-paper" id="receipt-paper">
+                            <div class="receipt-text">
+                                <div>SECUREBANK ATM</div>
+                                <div>───────────</div>
+                                <div>Amount: $<span id="receipt-amount">0</span></div>
+                                <div>Balance: $<span id="receipt-balance">0</span></div>
+                                <div>───────────</div>
+                                <div>Thank You!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Keypad -->
+            <div class="keypad">
+                <button class="key" data-key="1">1</button>
+                <button class="key" data-key="2">2</button>
+                <button class="key" data-key="3">3</button>
+                <button class="key" data-key="4">4</button>
+                <button class="key" data-key="5">5</button>
+                <button class="key" data-key="6">6</button>
+                <button class="key" data-key="7">7</button>
+                <button class="key" data-key="8">8</button>
+                <button class="key" data-key="9">9</button>
+                <button class="key cancel" data-key="cancel">CANCEL</button>
+                <button class="key" data-key="0">0</button>
+                <button class="key clear" data-key="clear">CLEAR</button>
+                <button class="key enter" data-key="enter" id="enter-btn">ENTER</button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="insert-card-btn" class="action-btn">Insert Card</button>
+                <button id="process-btn" class="action-btn" style="display:none;">Confirm</button>
+                <button id="cancel-btn" class="action-btn cancel-btn">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- Right Panel: Security Monitoring -->
+        <div class="security-panel">
+            <div class="security-header">
+                <span class="security-icon">🛡️</span>
+                <span class="security-title">SECURITY MONITORING SYSTEM</span>
+            </div>
+            
+            <!-- Video Feed -->
+            <div class="video-feed">
+                <img id="video-stream" src="/video" alt="Security Camera">
+                <div class="video-info">
+                    <span class="face-count">Faces: <span id="face-count">0</span></span>
+                </div>
+            </div>
+            
+            <!-- Status Indicators -->
+            <div class="status-section">
+                <div class="status-indicator">
+                    <div class="status-dot" id="access-dot"></div>
+                    <span class="status-text" id="access-text">ACCESS DENIED</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot warning" id="violation-dot"></div>
+                    <span class="status-text" id="violation-text">MASK DETECTED</span>
+                </div>
+                <div class="confidence-bar">
+                    <span class="confidence-label">Confidence:</span>
+                    <span class="confidence-value" id="confidence">0%</span>
+                </div>
+            </div>
+            
+            <!-- System Info -->
+            <div class="system-info">
+                <div class="info-row">System Status: <span class="info-value" id="sys-status">Alive</span></div>
+                <div class="info-row">Detection Mode: <span class="info-value">Real time</span></div>
+                <div class="info-row">Camera: <span class="info-value">1920x1080</span></div>
+                <div class="info-row">Issue: <span class="info-value" id="issue">None</span></div>
+                <div class="info-row">Warnings: <span class="info-value" id="warnings">0</span></div>
+                <div class="info-row">Last Update: <span class="info-value" id="last-update">--:--:--</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>

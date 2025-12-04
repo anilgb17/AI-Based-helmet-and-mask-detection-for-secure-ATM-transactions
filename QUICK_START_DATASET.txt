@@ -1,0 +1,244 @@
+================================================================================
+QUICK START: Download & Train Person Detection Dataset
+================================================================================
+
+GOAL: Get a better person detection model with 95%+ accuracy
+
+================================================================================
+OPTION 1: KAGGLE (RECOMMENDED - EASIEST)
+================================================================================
+
+STEP 1: Setup Kaggle API
+-------------------------
+1. Create account: https://www.kaggle.com/
+2. Get API token: https://www.kaggle.com/account → "Create New API Token"
+3. Install: pip install kaggle
+4. Place kaggle.json in:
+   - Windows: C:\Users\<username>\.kaggle\
+   - Linux/Mac: ~/.kaggle/
+
+STEP 2: Download Dataset
+-------------------------
+kaggle datasets download -d constantinwerner/human-detection-dataset
+unzip human-detection-dataset.zip -d "person dataset improved"
+
+STEP 3: Organize Dataset
+-------------------------
+# Manually organize images into:
+person dataset improved/
+    data/
+        train/
+            single_person/  (images with 1 person)
+            multiple_person/  (images with 2+ persons)
+        val/
+            single_person/
+            multiple_person/
+
+STEP 4: Train Model
+-------------------
+python train_person_improved.py
+
+STEP 5: Use New Model
+----------------------
+# Backup old model
+cp models/person_detector.pth models/person_detector_old.pth
+
+# Use new model
+cp models/person_detector_improved.pth models/person_detector.pth
+
+# Restart system
+python run_atm_system.py
+
+================================================================================
+OPTION 2: COCO DATASET (BEST QUALITY)
+================================================================================
+
+STEP 1: Download COCO
+----------------------
+# Create directory
+mkdir temp_coco
+cd temp_coco
+
+# Download validation images (~1GB)
+wget http://images.cocodataset.org/zips/val2017.zip
+
+# Download annotations
+wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+
+# Extract
+unzip val2017.zip
+unzip annotations_trainval2017.zip
+cd ..
+
+STEP 2: Organize Dataset
+-------------------------
+python organize_coco_persons.py
+
+This will:
+- Read COCO annotations
+- Count persons in each image
+- Copy to single_person or multiple_person folders
+- Split into train/val sets
+
+STEP 3: Train Model
+-------------------
+python train_person_improved.py
+
+STEP 4: Use New Model
+----------------------
+cp models/person_detector_improved.pth models/person_detector.pth
+python run_atm_system.py
+
+================================================================================
+OPTION 3: ROBOFLOW (MANUAL DOWNLOAD)
+================================================================================
+
+STEP 1: Browse Datasets
+------------------------
+1. Visit: https://universe.roboflow.com/
+2. Search: "person detection" or "person counting"
+3. Choose a dataset
+
+STEP 2: Download
+-----------------
+1. Click "Download Dataset"
+2. Select format: "Folder Structure"
+3. Download ZIP
+
+STEP 3: Organize
+----------------
+Extract and organize into:
+person dataset improved/
+    data/
+        train/
+            single_person/
+            multiple_person/
+        val/
+            single_person/
+            multiple_person/
+
+STEP 4: Train
+-------------
+python train_person_improved.py
+
+================================================================================
+RECOMMENDED DATASETS
+================================================================================
+
+1. Human Detection Dataset (Kaggle)
+   Link: https://www.kaggle.com/datasets/constantinwerner/human-detection-dataset
+   Size: ~500MB
+   Quality: ⭐⭐⭐⭐⭐
+
+2. COCO Person Subset
+   Link: http://images.cocodataset.org/
+   Size: ~1GB (validation set)
+   Quality: ⭐⭐⭐⭐⭐
+
+3. Crowd Human Detection (Kaggle)
+   Link: https://www.kaggle.com/datasets/tapakah68/yolo-crowd-human-detection-dataset
+   Size: ~2GB
+   Quality: ⭐⭐⭐⭐
+
+4. Roboflow Person Detection
+   Link: https://universe.roboflow.com/roboflow-100/people-detection-o6t89
+   Size: Varies
+   Quality: ⭐⭐⭐⭐
+
+================================================================================
+DATASET REQUIREMENTS
+================================================================================
+
+Minimum:
+- 500 images per class (1000 total)
+- 80/20 train/val split
+
+Good:
+- 2000 images per class (4000 total)
+- Diverse scenarios (indoor, outdoor, different lighting)
+
+Excellent:
+- 5000+ images per class (10000+ total)
+- High quality, diverse, balanced
+
+================================================================================
+EXPECTED RESULTS
+================================================================================
+
+Before (Current Model):
+- Training samples: 32
+- Validation accuracy: 87.50%
+- False positives: High
+
+After (Improved Model):
+- Training samples: 4000+
+- Validation accuracy: 95%+
+- False positives: Low
+- Better generalization
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Issue: "Kaggle API not found"
+Solution: pip install kaggle
+
+Issue: "kaggle.json not found"
+Solution: Download from https://www.kaggle.com/account
+
+Issue: "No images found"
+Solution: Check dataset structure with: ls -R "person dataset improved/data"
+
+Issue: "Out of memory"
+Solution: Reduce batch size in train_person_improved.py (BATCH_SIZE = 16)
+
+Issue: "Low accuracy"
+Solution: More training data, more epochs, better quality images
+
+================================================================================
+QUICK COMMANDS
+================================================================================
+
+# Kaggle method
+pip install kaggle
+kaggle datasets download -d constantinwerner/human-detection-dataset
+unzip human-detection-dataset.zip
+# Organize manually
+python train_person_improved.py
+
+# COCO method
+mkdir temp_coco && cd temp_coco
+wget http://images.cocodataset.org/zips/val2017.zip
+wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+unzip val2017.zip && unzip annotations_trainval2017.zip
+cd ..
+python organize_coco_persons.py
+python train_person_improved.py
+
+# Use new model
+cp models/person_detector_improved.pth models/person_detector.pth
+python run_atm_system.py
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+Full guide: DATASET_DOWNLOAD_GUIDE.md
+Training script: train_person_improved.py
+Organization script: organize_coco_persons.py
+Download script: download_person_dataset.py
+
+================================================================================
+SUMMARY
+================================================================================
+
+1. Choose dataset source (Kaggle/COCO/Roboflow)
+2. Download dataset
+3. Organize into single_person and multiple_person folders
+4. Train model: python train_person_improved.py
+5. Replace old model with new model
+6. Test: python run_atm_system.py
+
+Expected improvement: 87% → 95%+ accuracy, fewer false positives!
+
+================================================================================

@@ -1,0 +1,26 @@
+{
+  "flask_port": 5004,
+  "camera": {
+    "index": 0,
+    "width": 640,
+    "height": 480,
+    "fps": 30
+  },
+  "detection": {
+    "mask_threshold": 0.5,
+    "helmet_threshold": 0.4,
+    "person_threshold": 0.7,
+    "max_faces_allowed": 2,
+    "face_cascade": "haarcascade_frontalface_default.xml"
+  },
+  "audio": {
+    "enabled": true,
+    "rate_limit_seconds": 8,
+    "audio_directory": "audio"
+  },
+  "atm": {
+    "initial_balance": 5000.00,
+    "max_withdrawal": 1000.00,
+    "correct_pin": "1234"
+  }
+}
